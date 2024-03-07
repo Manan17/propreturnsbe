@@ -3,24 +3,30 @@ const ParkingLot = require("../models/ParkingLot");
 exports.createParkingLot = async (req, res) => {
   try {
     const body = await req.body;
-    const { capacity, id } = body;
+    let { capacity, id } = body;
+    if (capacity === undefined || typeof capacity !== "number") {
+      return res.status(400).json({
+        isSuccess: false,
+        error: { reason: "Invalid Capacity" },
+      });
+    }
     capacity = parseInt(capacity);
     if (id) {
       body["_id"] = id;
     } else {
-      res
+      return res
         .status(400)
         .json({ isSuccess: false, error: { reason: "Invalid ID" } });
     }
 
     if (capacity <= 0 || capacity > 2000) {
-      res.status(400).json({
+      return res.status(400).json({
         isSuccess: false,
-        error: { reason: "Invalid Capacity" },
+        error: { reason: "Capacity exceeds maximum limit" },
       });
     }
     const lot = await ParkingLot.create(body);
-    res.status(200).json({
+    return res.status(200).json({
       isSuccess: true,
       response: {
         id: lot?._id,

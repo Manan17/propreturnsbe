@@ -71,7 +71,25 @@ exports.getByColor = async (req, res) => {
 exports.getBySlots = async (req, res) => {
   try {
     const query = req.query;
-    // const {color,}
+    const { color, parkingLotId } = query;
+    const registrations = await Parking.find({
+      $and: [{ color: color, parkingLotId: parkingLotId, status: "LEFT" }],
+    }).select({ color: 1, slotNumber: 1 });
+    if (data.length > 0) {
+      return res.status(200).json({
+        isSuccess: true,
+        response: {
+          registrations,
+        },
+      });
+    } else {
+      return res.status(400).json({
+        isSuccess: true,
+        error: {
+          reason: `No car found with color ${color}`,
+        },
+      });
+    }
   } catch (e) {
     console.log("Error in creating parking lot ", e);
     res.status(400).json({

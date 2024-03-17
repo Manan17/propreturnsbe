@@ -1,15 +1,7 @@
-const {
-  createParkingLot,
-  getByColor,
-  getBySlots,
-} = require("../controller/parkinglots");
-const { createParking, deleteParking } = require("../controller/parkings");
+const { createRoom, getAllRooms } = require("../controller/rooms");
 
 const router = require("express").Router();
 
-router.get("/Parkings?", getByColor);
-router.get("Slots?", getBySlots);
-router.post("/ParkingLots", createParkingLot);
-router.post("/Parkings", createParking);
-router.delete("/Parkings", deleteParking);
+router.post("/create-room", createRoom);
+router.get("/get-rooms", getAllRooms);
 module.exports = router;
